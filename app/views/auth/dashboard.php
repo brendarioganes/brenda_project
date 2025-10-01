@@ -1,277 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Auth System</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dashboard</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
     <style>
         body {
-            background-color: #ede7f6; /* Light purple background */
-            font-family: sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
         }
-
-        .profile-picture {
-            width: 80px;
-            height: 80px;
+        .user-avatar {
+            width: 96px;
+            height: 96px;
+            background: linear-gradient(135deg, #3b82f6, #9333ea);
             border-radius: 50%;
-            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #3b82f6; /* Blue, similar to the login button */
-            color: white; /* Ensure the initials are white */
-            font-size: 2rem; /* Adjust font size as needed */
-        }
-
-        .profile-picture img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .welcome-card {
-            background-color: white;
-            border-radius: 1rem; /* Rounded corners */
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1); /* Shadow */
-            padding: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .stats-card {
-            background-color: white;
-            border-radius: 1rem;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-            padding: 1.5rem;
-        }
-
-        .user-info-card {
-            background-color: white;
-            border-radius: 1rem;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
-        }
-
-        .form-label {
-            font-weight: 500;
-            color: #4b5563; /* Darker gray */
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-
-        .form-value {
-            color: #374151; /* Even darker gray */
-            background-color: #f9fafb; /* Very light gray */
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-        }
-
-        .logout-button {
-            background-color: #3b82f6; /* Blue, same as login button */
             color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            transition: background-color 0.2s;
-            text-decoration: none; /* Remove underline from the link */
-            cursor: pointer; /* Change cursor to pointer */
+            font-size: 2rem;
+            font-weight: 700;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-
-        .logout-button:hover {
-            background-color: #2563eb; /* Darker blue on hover */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            background-color: #d1fae5;
+            color: #065f46;
         }
-
-        /* Modal Styles */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 10; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto; /* 15% from the top and centered */
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%; /* Could be more or less, depending on screen size */
-            border-radius: 0.5rem;
-            position: relative;
-        }
-
-        .close-button {
-            position: absolute;
-            top: 0;
-            right: 0;
-            padding: 10px;
-            cursor: pointer;
-        }
-
-        .modal-buttons {
-            text-align: right;
-            margin-top: 1rem;
-        }
-
-        .confirm-button, .cancel-button {
-            padding: 0.5rem 1rem;
-            border-radius: 0.25rem;
-            cursor: pointer;
-            margin-left: 0.5rem;
-        }
-
-        .confirm-button {
-            background-color: #3b82f6;
-            color: white;
-        }
-
-        .cancel-button {
-            background-color: #ddd;
+        .status-badge > .dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            background-color: #10b981;
+            border-radius: 50%;
+            margin-right: 0.5rem;
         }
     </style>
-    <script>
-        function showLogoutModal() {
-            document.getElementById('logoutModal').style.display = "block";
-        }
-
-        function hideLogoutModal() {
-            document.getElementById('logoutModal').style.display = "none";
-        }
-    </script>
 </head>
-<body class="min-h-screen">
-    <!-- Navigation Header -->
-    <nav class="bg-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center">
-                    <h1 class="text-xl font-bold text-gray-800">Dashboard</h1>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <span id="welcomeMessage" class="text-gray-600"></span>
-                    <button onclick="showLogoutModal()" class="logout-button">
-                        Logout
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
+<body class="p-4">
+    <div class="container-lg">
 
-    <!-- Main Content -->
-    <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <!-- Welcome Card -->
-        <div class="welcome-card flex items-center">
-            <div class="profile-picture mr-4">
-                <?php if(!empty($user['profile_picture']) && file_exists($user['profile_picture'])): ?>
-                    <img src="<?= base_url() . $user['profile_picture']; ?>" alt="Profile Picture">
-                <?php else: ?>
-                    <?= strtoupper(substr($user['first_name'],0,1)) ?>
-                <?php endif; ?>
-            </div>
+        <!-- Header -->
+        <header class="bg-light rounded shadow p-3 mb-4 d-flex justify-content-between align-items-center">
             <div>
-                <h2 class="text-3xl font-bold text-gray-800 mb-2">Welcome to Your Dashboard!</h2>
-                <p class="text-gray-600 text-lg">You have successfully logged in. Here's your personalized dashboard.</p>
+                <h1 class="h3 mb-1">Dashboard</h1>
+                <p class="text-muted mb-0">Welcome back, <span id="userName" class="fw-semibold text-primary"><?= htmlspecialchars($user['username']); ?></span>!</p>
             </div>
-        </div>
+            <button
+                type="button"
+                class="btn btn-danger"
+                data-bs-toggle="modal"
+                data-bs-target="#logoutModal"
+            >
+                Logout
+            </button>
+        </header>
 
-        <!-- Stats Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div class="stats-card">
-                <div class="flex items-center">
-                    <div class="p-3 rounded-full bg-blue-100">
-                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                        </svg>
-                    </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Profile</p>
-                        <p class="text-2xl font-semibold text-gray-900">Active</p>
-                    </div>
+        <!-- User Information Card Section -->
+        <div class="bg-light rounded shadow p-4 mb-4">
+            <h2 class="h5 fw-bold mb-4">User Information</h2>
+            <div class="d-flex align-items-start gap-4">
+                <!-- User Avatar -->
+                <div class="user-avatar flex-shrink-0">
+                    <span id="userInitials"><?= strtoupper(substr($user['username'], 0, 2)); ?></span>
                 </div>
-            </div>
 
-            <div class="stats-card">
-                <div class="flex items-center">
-                    <div class="p-3 rounded-full bg-green-100">
-                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
+                <!-- User Details -->
+                <div class="row flex-grow-1 g-3">
+                    <div class="col-12 col-md-6 bg-white rounded p-3 shadow-sm">
+                        <p class="mb-1 text-muted fw-medium small">Username</p>
+                        <p class="mb-0 fw-semibold"><?= htmlspecialchars($user['username']); ?></p>
                     </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Status</p>
-                        <p class="text-2xl font-semibold text-gray-900">Online</p>
+                    <div class="col-12 col-md-6 bg-white rounded p-3 shadow-sm">
+                        <p class="mb-1 text-muted fw-medium small">Email</p>
+                        <p class="mb-0 fw-semibold"><?= htmlspecialchars($user['email']); ?></p>
                     </div>
-                </div>
-            </div>
-
-            <div class="stats-card">
-                <div class="flex items-center">
-                    <div class="p-3 rounded-full bg-yellow-100">
-                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
+                    <div class="col-12 col-md-6 bg-white rounded p-3 shadow-sm d-flex align-items-center">
+                        <p class="mb-0 me-3 text-muted fw-medium small">Account Status</p>
+                        <span class="status-badge">
+                            <span class="dot"></span>
+                            Active
+                        </span>
                     </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Last Login</p>
-                        <p class="text-2xl font-semibold text-gray-900" id="loginTime">Now</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="stats-card">
-                <div class="flex items-center">
-                    <div class="p-3 rounded-full bg-purple-100">
-                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                        </svg>
-                    </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Activity</p>
-                        <p class="text-2xl font-semibold text-gray-900">High</p>
+                    <div class="col-12 col-md-6 bg-white rounded p-3 shadow-sm">
+                        <p class="mb-1 text-muted fw-medium small">Member Since</p>
+                        <p class="mb-0 fw-semibold"><?= date('F j, Y', strtotime($user['created_at'])); ?></p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- User Information Card -->
-        <div class="user-info-card">
-            <h3 class="text-2xl font-bold text-gray-800 mb-6">User Information</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="form-label">First Name</label>
-                    <p id="userFirstName" class="form-value"><?= ($user['first_name']) ?></p>
+        <!-- Stats Cards -->
+        <div class="row g-4 mb-4">
+            <div class="col-12 col-md-4">
+                <div class="bg-light rounded shadow p-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted small mb-1">Total Projects</p>
+                        <p class="fs-2 fw-bold mb-0">12</p>
+                    </div>
+                    <div class="bg-primary bg-opacity-10 rounded-circle p-3">
+                        <svg class="bi" width="32" height="32" fill="#0d6efd" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
                 </div>
-                <div>
-                    <label class="form-label">Last Name</label>
-                    <p id="userLastName" class="form-value"><?= ($user['last_name']) ?></p>
+            </div>
+
+            <div class="col-12 col-md-4">
+                <div class="bg-light rounded shadow p-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted small mb-1">Active Tasks</p>
+                        <p class="fs-2 fw-bold mb-0">28</p>
+                    </div>
+                    <div class="bg-success bg-opacity-10 rounded-circle p-3">
+                        <svg class="bi" width="32" height="32" fill="#198754" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                        </svg>
+                    </div>
                 </div>
-                <div>
-                    <label class="form-label">Email Address</label>
-                    <p id="userEmail" class="form-value"><?= ($user['email']) ?></p>
+            </div>
+
+            <div class="col-12 col-md-4">
+                <div class="bg-light rounded shadow p-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted small mb-1">Completed</p>
+                        <p class="fs-2 fw-bold mb-0">45</p>
+                    </div>
+                    <div class="bg-purple bg-opacity-10 rounded-circle p-3" style="background-color:#ede9fe !important;">
+                        <svg class="bi" width="32" height="32" fill="#7c3aed" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 13l4 4L19 7"/>
+                        </svg>
+                    </div>
                 </div>
-                <div>
-                    <label class="form-label">Username</label>
-                    <p id="userEmail" class="form-value"><?= ($user['username']) ?></p>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="bg-light rounded shadow p-4">
+            <h2 class="h5 fw-bold mb-4">Recent Activity</h2>
+            <div class="list-group list-group-flush">
+                <div class="list-group-item d-flex align-items-center bg-white rounded mb-3 shadow-sm">
+                    <div class="bg-primary rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                        <svg width="16" height="16" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="M12 4v16m8-8H4"/>
+                        </svg>
+                    </div>
+                    <div class="flex-grow-1">
+                        <p class="mb-0 fw-semibold">New project created</p>
+                        <small class="text-muted">Website redesign project</small>
+                    </div>
+                    <small class="text-muted ms-3">2 hours ago</small>
+                </div>
+
+                <div class="list-group-item d-flex align-items-center bg-white rounded mb-3 shadow-sm">
+                    <div class="bg-success rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                        <svg width="16" height="16" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="M5 13l4 4L19 7"/>
+                        </svg>
+                    </div>
+                    <div class="flex-grow-1">
+                        <p class="mb-0 fw-semibold">Task completed</p>
+                        <small class="text-muted">Homepage mockup approved</small>
+                    </div>
+                    <small class="text-muted ms-3">5 hours ago</small>
+                </div>
+
+                <div class="list-group-item d-flex align-items-center bg-white rounded shadow-sm">
+                    <div class="bg-purple rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; background-color:#7c3aed;">
+                        <svg width="16" height="16" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                        </svg>
+                    </div>
+                    <div class="flex-grow-1">
+                        <p class="mb-0 fw-semibold">New comment</p>
+                        <small class="text-muted">Team member left feedback</small>
+                    </div>
+                    <small class="text-muted ms-3">1 day ago</small>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Logout Modal -->
-    <div id="logoutModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button" onclick="hideLogoutModal()">&times;</span>
-            <p>Are you sure you want to logout?</p>
-            <div class="modal-buttons">
-                <button class="cancel-button" onclick="hideLogoutModal()">Cancel</button>
-                <a href="<?= site_url('logout');?>" class="confirm-button">Logout</a>
-            </div>
+    <!-- Bootstrap Logout Confirmation Modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded shadow">
+          <div class="modal-header">
+            <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-muted">
+            Are you sure you want to log out?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <!-- Change to form POST if your backend requires POST logout -->
+            <a href="<?= site_url('/logout'); ?>" class="btn btn-danger">Logout</a>
+          </div>
         </div>
+      </div>
     </div>
 
+    <!-- Bootstrap JS Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

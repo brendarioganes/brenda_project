@@ -15,6 +15,15 @@ class Admin_Controller extends Controller {
 
 
      public function read(){
+
+            if(!$this->session->userdata('logged_in')){
+                return redirect('/');
+            }
+
+            if($this->session->userdata('role') != 'admin'){
+                return redirect('/admin/user-management');
+            }
+                
             $page = 1;
             if(isset($_GET['page']) && ! empty($_GET['page'])) {
                 $page = $this->io->get('page');
@@ -47,9 +56,11 @@ class Admin_Controller extends Controller {
             $this->pagination->initialize($total_rows, $records_per_page, $page, 'admin/user-management?q='.$q );
             // site_url('admin').'?q='.$q ito yung error ko kanina, idk bakit 
             $data['page'] = $this->pagination->paginate();
+                        $data['total_users'] = $this->UserModel->countAllUsers();
+
             $this->call->view('admin/dashboard', $data);
         }
-
+    
 
     public function updateUser($id){
 
@@ -83,12 +94,6 @@ class Admin_Controller extends Controller {
      public function createAdmin() {
 
         $this->form_validation
-            ->name('first_name')
-                ->required()
-                ->max_length(250)
-            ->name('last_name')
-                ->required()
-                ->max_length(250)
             ->name('username')
                 ->required()
                 ->max_length(20)
@@ -108,13 +113,12 @@ class Admin_Controller extends Controller {
         if($this->form_validation->run() == FALSE) {
             $errors = $this->form_validation->get_errors();
             setErrors($errors);
-            redirect('/register');
+            redirect('/signup');
             return;
         }
 
         // Get form input
-        $first_name = $this->io->post('first_name');
-        $last_name  = $this->io->post('last_name');
+
         $username   = $this->io->post('username');
         $email      = $this->io->post('email');
         $password   = $this->io->post('password');
@@ -123,20 +127,20 @@ class Admin_Controller extends Controller {
         // Check existing email/username
         if($this->UserModel->findByEmail($email)) {
             setMessage('danger', 'Email already exists!');
-            redirect('register');
+            redirect('signup');
             return;
         }
 
         if($this->UserModel->findByUsername($username)) {
             setMessage('danger', 'Username already exists!');
-            redirect('register');
+            redirect('signup');
             return;
         }
 
         // Check password confirmation
         if($password !== $confirm) {
             setMessage('danger', 'Passwords do not match!');
-            redirect('register');
+            redirect('signup');
             return;
         }
         if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
@@ -171,8 +175,7 @@ class Admin_Controller extends Controller {
 
         // Insert user
         $this->UserModel->insert([
-            'first_name' => $first_name,
-            'last_name'  => $last_name,
+
             'username'   => $username,
             'email'      => $email,
             'password'   => password_hash($password, PASSWORD_DEFAULT),

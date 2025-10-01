@@ -29,7 +29,7 @@ class Auth_Controller extends Controller {
 
     public function loginUser(){
         $this->form_validation
-            ->name('email')
+            ->name('username')
                 ->required()
             ->name('password')
                 ->required();
@@ -40,22 +40,21 @@ class Auth_Controller extends Controller {
                 redirect('/login');
             } else {
 
-                $email      = $this->io->post('email');
+                $username      = $this->io->post('username');
                 $password   = $this->io->post('password');
 
-                $user = $this->UserModel->findByEmail($email);
+                $user = $this->UserModel->findByUsername($username);
                  if ($user) {
                     if (password_verify($password, $user['password'])) {
                       $this->session->set_userdata([
-                                'first_name' => $user['first_name'],
-                                'last_name' => $user['last_name'],
+        
                                 'user_id' => $user['id'],
                                 'username' => $user['username'],
                                 'role' => $user['role'],
                                 'logged_in' => TRUE
                             ]);
 
-                            setMessage('success', 'Welcome back, ' . $user['first_name']);
+                            setMessage('success', 'Welcome back, ' . $user['username']);
                             redirect(uri:'/home');
 
                             if($user['role'] == 'admin'){

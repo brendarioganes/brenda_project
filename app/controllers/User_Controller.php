@@ -16,19 +16,24 @@ class User_Controller extends Controller {
 
 
     public function registerForm(){
-        $this->call->view('auth/register');
-    }
+      
+            if($this->session->userdata('logged_in')){
+               if($this->session->userdata('role') != 'admin'){
+                redirect('/home');
+               }
+                else{
+                redirect('/admin/user-management');
+                }
+            }else{
+ $this->call->view('auth/register');            }
+
+            }
+    
 
 
     public function createUser() {
 
         $this->form_validation
-            ->name('first_name')
-                ->required()
-                ->max_length(250)
-            ->name('last_name')
-                ->required()
-                ->max_length(250)
             ->name('username')
                 ->required()
                 ->max_length(20)
@@ -48,13 +53,12 @@ class User_Controller extends Controller {
         if($this->form_validation->run() == FALSE) {
             $errors = $this->form_validation->get_errors();
             setErrors($errors);
-            redirect('/register');
+            redirect('/signup');
             return;
         }
 
         // Get form input
-        $first_name = $this->io->post('first_name');
-        $last_name  = $this->io->post('last_name');
+
         $username   = $this->io->post('username');
         $email      = $this->io->post('email');
         $password   = $this->io->post('password');
@@ -63,20 +67,20 @@ class User_Controller extends Controller {
         // Check existing email/username
         if($this->UserModel->findByEmail($email)) {
             setMessage('danger', 'Email already exists!');
-            redirect('register');
+            redirect('signup');
             return;
         }
 
         if($this->UserModel->findByUsername($username)) {
             setMessage('danger', 'Username already exists!');
-            redirect('register');
+            redirect('signup');
             return;
         }
 
         // Check password confirmation
         if($password !== $confirm) {
             setMessage('danger', 'Passwords do not match!');
-            redirect('register');
+            redirect('signup');
             return;
         }
         if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
@@ -111,22 +115,26 @@ class User_Controller extends Controller {
 
         // Insert user
         $this->UserModel->insert([
-            'first_name' => $first_name,
-            'last_name'  => $last_name,
+
             'username'   => $username,
             'email'      => $email,
             'password'   => password_hash($password, PASSWORD_DEFAULT),
-            'profile_picture' => $profilePic
+            'profile_picture' => $profilePic,
+            'role' => "user",
         ]);
 
         setMessage('success', 'Account created successfully!');
-        redirect('/register');
+        redirect('/signup');
     }
 
     public function userHomepage(){
-        if(!$this->session->has_userdata('logged_in')){
+        if($this->session->has_userdata('logged_in'))
+            {
                 redirect('/');
             }
+
+            if($this->session->userdata('role') != 'user'){
+                redirect('/admin/user-management');
 
              $user_id = $this->session->userdata('user_id');
             $data['user'] = $this->UserModel->find($user_id);
@@ -134,7 +142,7 @@ class User_Controller extends Controller {
     }
 
 }
-
+}
 
 
 

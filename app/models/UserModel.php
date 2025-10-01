@@ -10,15 +10,12 @@ class UserModel extends Model {
     protected $table = 'users';
     protected $primary_key = 'id';
 
-    protected $fillable = [
-        'first_name',
-        'last_name',
+        protected $fillable = [
         'username',
         'password',
         'email',
-        'profile_picture'
-
-
+        'profile_picture',
+        'created_at'
 
     ];
 
@@ -37,6 +34,13 @@ class UserModel extends Model {
                         ->get();
     }
 
+    // Add this method to the UserModel class
+    public function countAllUsers() {
+   $result = $this->db->table($this->table)->select_count('id', 'user_count')->get();
+    return $result['user_count'] ?? 0;
+        
+    }
+
    
 
     public function getAll($q, $records_per_page = null, $page = null){
@@ -46,8 +50,7 @@ class UserModel extends Model {
             $query = $this->db->table($this->table);
 
             $query->like('id', '%'.$q. '%')
-                ->or_like('first_name', '%'.$q. '%')
-                ->or_like('last_name', '%'.$q. '%')
+
                 ->or_like('username', '%'.$q. '%')
                 ->or_like('email', '%'.$q. '%');
 

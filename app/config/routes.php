@@ -43,7 +43,7 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
 |
 */
 //views
-$router->get('/register', 'User_Controller::registerForm');
+$router->get('/signup', 'User_Controller::registerForm');
 $router->get('/', 'Auth_Controller::loginForm');
 $router->get('/home', 'User_Controller::userHomepage');
 

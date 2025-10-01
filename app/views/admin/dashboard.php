@@ -433,11 +433,11 @@
                 <div class="status-card-header">
                     <div class="status-icon users">
                         <i class="bi bi-people"></i>
+                        </div>
+                        <p class="status-label">Total Users</p>
                     </div>
-                    <p class="status-label">Total Users</p>
+<h3 class="status-value"><?= $total_users ?? '0' ?></h3>
                 </div>
-                <h3 class="status-value"><?= count($getAll); ?></h3>
-            </div>
             
             <div class="status-card">
                 <div class="status-card-header">
@@ -503,8 +503,6 @@
                         <tr>
                             <th>User</th>
                             <th>Email</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
                             <th>Role</th>
                             <th>Joined</th>
                             <th>Actions</th>
@@ -525,8 +523,7 @@
                                 </div>
                             </td>
                             <td><?= html_escape($user['email']); ?></td>
-                            <td><?= html_escape($user['first_name']); ?></td>
-                            <td><?= html_escape($user['last_name']); ?></td>
+
                             <td><?= html_escape($user['role']); ?></td>
                             <td><?= html_escape($user['created_at']); ?></td>
                             <td>
@@ -546,14 +543,7 @@
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <div class="mb-3">
-                                                <label class="form-label">First Name</label>
-                                                <input type="text" name="first_name" class="form-control">
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label">Last Name</label>
-                                                <input type="text" name="last_name" class="form-control">
-                                            </div>
+                                          
                                             <div class="mb-3">
                                                 <label class="form-label">Username</label>
                                                 <input type="text" name="username" class="form-control">
@@ -593,14 +583,7 @@
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <div class="mb-3">
-                                                <label class="form-label">First Name</label>
-                                                <input type="text" name="first_name" class="form-control" value="<?= html_escape($user['first_name']); ?>">
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label">Last Name</label>
-                                                <input type="text" name="last_name" class="form-control" value="<?= html_escape($user['last_name']); ?>">
-                                            </div>
+
                                             <div class="mb-3">
                                                 <label class="form-label">Username</label>
                                                 <input type="text" name="username" class="form-control" value="<?= html_escape($user['username']); ?>">
