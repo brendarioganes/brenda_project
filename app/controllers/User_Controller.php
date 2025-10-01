@@ -128,18 +128,21 @@ class User_Controller extends Controller {
     }
 
     public function userHomepage(){
-        if($this->session->has_userdata('logged_in'))
-            {
-                redirect('/');
-            }
-
-            if($this->session->userdata('role') != 'user'){
-                redirect('/admin/user-management');
-
-             $user_id = $this->session->userdata('user_id');
-            $data['user'] = $this->UserModel->find($user_id);
-            $this->call->view('auth/dashboard', $data);
+         if (!$this->session->has_userdata('logged_in')) {
+    // User not logged in, redirect to home
+    redirect('/');
+} else {
+    // User is logged in
+    if ($this->session->userdata('role') != 'user') {
+        // Not a regular user, redirect to admin panel
+        redirect('/admin/user-management');
+    } else {
+        // Regular user, load dashboard
+        $user_id = $this->session->userdata('user_id');
+        $data['user'] = $this->UserModel->find($user_id);
+        $this->call->view('auth/dashboard', $data);
     }
+}
 
 }
 }
