@@ -79,7 +79,7 @@
             <div class="d-flex align-items-start gap-4">
                 <!-- User Avatar -->
                <div class="user-avatar flex-shrink-0">
-                   <img src="<?= base_url() . $user['profile_picture']; ?>" alt="Profile Picture">
+                   <img src="<?=  var_dump($user['profile_picture'])?>" alt="Profile Picture">
         </div>
 
 
