@@ -89,7 +89,7 @@
         <input
           type="file"
           id="profile"
-          name="profile"
+          name="profile_picture"
           required
           class="form-control"
         />
