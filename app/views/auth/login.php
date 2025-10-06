@@ -18,6 +18,8 @@
 <body class="d-flex align-items-center justify-content-center p-4">
   <div class="bg-white rounded-3 shadow-lg p-5 w-100" style="max-width: 400px;">
     <h1 class="text-center mb-4 fw-bold text-secondary">Login</h1>
+       <?php getErrors(); ?>
+            <?php getMessage(); ?>
     <form id="loginForm" action="<?= site_url('login'); ?>" method="POST" class="needs-validation" novalidate>
       <div class="mb-3">
         <label for="username" class="form-label fw-medium">Username</label>
