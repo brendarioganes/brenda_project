@@ -13,19 +13,28 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
         }
-        .user-avatar {
-            width: 96px;
-            height: 96px;
-            background: linear-gradient(135deg, #3b82f6, #9333ea);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 2rem;
-            font-weight: 700;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
+    .user-avatar {
+    width: 96px;
+    height: 96px;
+    background: linear-gradient(135deg, #3b82f6, #9333ea);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    font-weight: 700;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    overflow: hidden; /* important for round image clipping */
+}
+
+.user-avatar .profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* ensures image fills the circle */
+    border-radius: 50%;
+}
+
         .status-badge {
             display: inline-flex;
             align-items: center;
@@ -69,9 +78,14 @@
             <h2 class="h5 fw-bold mb-4">User Information</h2>
             <div class="d-flex align-items-start gap-4">
                 <!-- User Avatar -->
-                <div class="user-avatar flex-shrink-0">
-                    <span id="userInitials"><?= strtoupper(substr($user['username'], 0, 2)); ?></span>
-                </div>
+               <div class="user-avatar flex-shrink-0">
+    <?php if (!empty($user['profile_image'])): ?>
+        <img src="<?= base_url() . ($user['profile_picture']) ?>" alt="Profile Image" class="profile-img">
+    <?php else: ?>
+        <span id="userInitials"><?= strtoupper(substr($user['username'], 0, 2)); ?></span>
+    <?php endif; ?>
+</div>
+
 
                 <!-- User Details -->
                 <div class="row flex-grow-1 g-3">
