@@ -79,7 +79,12 @@
             <div class="d-flex align-items-start gap-4">
                 <!-- User Avatar -->
                <div class="user-avatar flex-shrink-0">
-                   <img src="<?= site_url($user['profile_picture'])?>" alt="Profile Picture">
+                 <?php if (!empty($user['profile_picture']) && file_exists($user['profile_picture'])): ?>
+    <img src="<?= base_url() . $user['profile_picture']; ?>" alt="Profile Picture" class="profile-img">
+<?php else: ?>
+    <!-- fallback avatar if no profile picture -->
+    <span><?= strtoupper(substr($user['username'], 0, 1)); ?></span>
+<?php endif; ?>
         </div>
 
 
