@@ -79,13 +79,8 @@
             <div class="d-flex align-items-start gap-4">
                 <!-- User Avatar -->
                <div class="user-avatar flex-shrink-0">
-    <?php if (!empty($user['profile_image'])): ?>
-                    
-                                        <img src="<?= base_url() . $user['profile_picture']; ?>" alt="Profile Picture">
-    <?php else: ?>
-        <span id="userInitials"><?= strtoupper(substr($user['username'], 0, 2)); ?></span>
-    <?php endif; ?>
-</div>
+                   <img src="<?= base_url() . $user['profile_picture']; ?>" alt="Profile Picture">
+        </div>
 
 
                 <!-- User Details -->
